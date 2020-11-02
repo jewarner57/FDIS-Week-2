@@ -61,19 +61,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
 
-class UserView(ModelView):
-    def is_accessible(self):
-        """get the current authentication status of the user"""
-        return current_user.is_authenticated
-
-    # can be accessed from /admin/
-    @expose('/')
-    def index(self):
-        """show the admin page"""
-        return self.render('admin.html')
-
-
-admin.add_view(UserView(User, db.session))
+admin.add_view(ModelView(User, db.session))
 
 
 # ROUTES
