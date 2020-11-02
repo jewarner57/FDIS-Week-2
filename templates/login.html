@@ -1,1 +1,33 @@
 <!-- Login Template -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDIS Week-2</title>
+</head>
+
+<body>
+    <h1>Login</h1>
+    <form method='POST'>
+        <fieldset>
+            <div class="form_container">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="" placeholder="user@email.com" required="true">
+
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" value="" placeholder="password" required="true">
+
+                <input type="submit" class="submit" value="Login">
+
+                {% for message in get_flashed_messages() %}
+                <p class="errorText">{{message}}</p>
+                {% endfor %}
+            </div>
+        </fieldset>
+    </form>
+</body>
+
+</html>
