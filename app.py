@@ -1,5 +1,6 @@
 """Import libraries."""
 from flask import Flask, render_template, redirect, url_for, request, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 # TODO: install & import Flask-SQLAlchemy
@@ -56,7 +57,7 @@ class User(UserMixin, db.Model):
     # TODO: Add a username using a String
     username = db.Column(db.String(80), nullable=False)
     # TODO: Add a password using a String
-    password = db.Column(db.String(80), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
 
 # TODO: Define an admin view for users
@@ -69,7 +70,7 @@ class UserView(BaseView):
     @expose('/')
     def index(self):
         """show the admin page"""
-        return self.render('index.html')
+        return self.render('admin.html')
 
 
 admin.add_view(UserView(name="Admin"))
@@ -84,6 +85,25 @@ def home():
     return render_template("home.html")
 
 
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+    """displays the signup page"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        hashedPass = generate_password_hash(password)
+
+        user = User(email=email, username=username, password_hash=hashedPass)
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+    else:
+        return render_template("signup.html")
+
+
 # TODO: Create a login route
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -94,7 +114,7 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
-        if password == user.password:
+        if check_password_hash(user.password_hash, password):
             login_user(user)
             return redirect(url_for("secrets"))
         else:
