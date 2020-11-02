@@ -61,7 +61,12 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
 
-admin.add_view(ModelView(User, db.session))
+class UserModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+
+admin.add_view(UserModelView(User, db.session))
 
 
 # ROUTES
