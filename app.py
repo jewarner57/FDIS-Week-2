@@ -30,6 +30,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
+    """gets the current user object"""
     return User.query.get(int(user_id))
 
 
@@ -61,11 +62,13 @@ class User(UserMixin, db.Model):
 # TODO: Define an admin view for users
 class UserView(BaseView):
     def is_accessible(self):
+        """get the current authentication status of the user"""
         return current_user.is_authenticated
 
     # can be accessed from /admin/
     @expose('/')
     def index(self):
+        """show the admin page"""
         return self.render('index.html')
 
 
@@ -77,12 +80,14 @@ admin.add_view(UserView(name="Admin"))
 # TODO: Create a home route
 @app.route('/')
 def home():
+    """displays the home page"""
     return render_template("home.html")
 
 
 # TODO: Create a login route
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    """displays a login page"""
     if request.method == 'POST':
         email = request.form.get("email")
         password = request.form.get("password")
@@ -104,6 +109,7 @@ def login():
 @app.route('/secrets')
 @login_required
 def secrets():
+    """displays a page that can only be viewed by a logged in user"""
     return render_template("secrets.html")
 
 
@@ -111,6 +117,7 @@ def secrets():
 @app.route('/logout')
 @login_required
 def logout():
+    """logs out the user"""
     logout_user()
     return redirect(url_for("login"))
 
