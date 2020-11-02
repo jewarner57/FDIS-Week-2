@@ -60,8 +60,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
 
-# TODO: Define an admin view for users
-class UserView(BaseView):
+class AdminView(BaseView):
     def is_accessible(self):
         """get the current authentication status of the user"""
         return current_user.is_authenticated
@@ -73,12 +72,11 @@ class UserView(BaseView):
         return self.render('admin.html')
 
 
-admin.add_view(UserView(name="Admin"))
+admin.add_view(AdminView(name="Admin"))
 
 
 #                           ROUTES
 
-# TODO: Create a home route
 @app.route('/')
 def home():
     """displays the home page"""
@@ -104,7 +102,6 @@ def signup():
         return render_template("signup.html")
 
 
-# TODO: Create a login route
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """displays a login page"""
@@ -125,7 +122,6 @@ def login():
         return render_template("login.html")
 
 
-# TODO: Create a secrets route which requires the user to be logged in
 @app.route('/secrets')
 @login_required
 def secrets():
@@ -133,7 +129,6 @@ def secrets():
     return render_template("secrets.html")
 
 
-# TODO: Create a logout route (this route does not need a template)
 @app.route('/logout')
 @login_required
 def logout():
