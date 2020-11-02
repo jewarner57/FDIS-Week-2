@@ -75,7 +75,7 @@ class AdminView(BaseView):
 admin.add_view(AdminView(name="Admin"))
 
 
-#                           ROUTES
+# ROUTES
 
 @app.route('/')
 def home():
