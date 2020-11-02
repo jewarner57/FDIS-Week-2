@@ -8,7 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 # TODO: install & import Flask-Login
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 # TODO: install & import Flask-Admin
-from flask_admin import Admin, expose, BaseView
+from flask_admin import Admin, expose
+from flask_admin.contrib.sqla import ModelView
 
 
 app = Flask(__name__)
@@ -60,7 +61,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
 
-class AdminView(BaseView):
+class UserView(ModelView):
     def is_accessible(self):
         """get the current authentication status of the user"""
         return current_user.is_authenticated
@@ -72,7 +73,7 @@ class AdminView(BaseView):
         return self.render('admin.html')
 
 
-admin.add_view(AdminView(name="Admin"))
+admin.add_view(UserView(User, db.session))
 
 
 # ROUTES
